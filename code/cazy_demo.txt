@@ -1,0 +1,14 @@
+#run for every genome's faa
+mkdir -p dbcan_result
+run_dbcan.py $(genome_id).faa protein --db_dir /path/cazy_dbcan/db --out_dir dbcan_result/$(genome_id)
+
+#prepare finished file
+ls /path/dbcan_result/*/overview.txt > finished.txt
+
+#get CDS and CAZY 
+python cazy_profile_CDS.py
+
+#merge CDS profile
+cd CDS_profile
+awk 'FNR==1 && NR!=1 {next} {print}' profile_*.txt > ../CDS_cazy.txt
+

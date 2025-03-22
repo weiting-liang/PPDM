@@ -1,0 +1,14 @@
+#for every genome's faa
+mkdir -p result tmp
+emapper.py --cpu 8 --data_dir /path/emapperdb-5.0.2 -o ${genome_id} --output_dir ./result --temp_dir ./tmp --override -i ${genome_id}.faa --dmnd_db /path/emapperdb-5.0.2/eggnog_proteins.dmnd --no_file_comments
+
+#finished path
+ls /path/output/*.emapper.annotations
+
+#get CDS and KO
+sh get_contigs_ko.sh
+sh contigs_ko_profile.sh
+
+#merge all CDS_KO profile
+cd contigs_profile
+cat *.modified > ./mags_contigs_ko.tsv

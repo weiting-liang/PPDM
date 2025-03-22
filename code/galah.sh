@@ -1,0 +1,15 @@
+galah cluster \
+  --genome-fasta-list mag_pro.path.list \
+  --checkm2-quality-report checkm2_quality_report.tsv \
+  --genome-fasta-extension fa \
+  --ani 95 \
+  --precluster-ani 90 \
+  --precluster-method finch \
+  --min-completeness 50 \
+  --max-contamination 5 \
+  --fragment-length 1500 \
+  --min-aligned-fraction 50 \
+  --output-representative-fasta-directory ./hmq_genome_rep_cluster_species \
+  --output-cluster-definition ./hmq_genome_rep_cluster_definition_species.tsv \
+  --output-representative-list ./hmq_genome_rep_cluster_list_species.tsv \
+  --threads 8

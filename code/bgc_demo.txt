@@ -1,0 +1,12 @@
+#run for every genome's fasta
+mkdir -p ./tmp
+antismash --cb-general --cb-knownclusters --cb-subclusters --asf --pfam2go --smcog-trees --output-dir ./bgc_$(basename $fa_file) $fa_file --genefinding-tool prodigal -c 4
+
+#clustering
+#Dir output: there are all bgc_* dirs outputs from antismash
+python BiG-MAP.family.lwt.py -D /path/output/ -O BGC_family -p 8
+
+
+#trans json to csv
+python json_to_csv.py /path/BGC_family/BiG-MAP.GCs
+

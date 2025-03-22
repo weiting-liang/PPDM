@@ -1,0 +1,2 @@
+export PATH=/path/conda/envs/bioenv/bin:$PATH
+megahit -1 /path/RDPYD19061531_A.rmhost_CHM13.1.fq.gz -2 /path/RDPYD19061531_A.rmhost_CHM13.2.fq.gz -t 8 --presets meta-sensitive --min-contig-len 100 --out-dir RDPYD19061531_A --out-prefix RDPYD19061531_A.megahit

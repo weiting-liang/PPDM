@@ -1,0 +1,16 @@
+#run for every genome's faa
+diamond blastp --db /path/vfdb/ -q ${genome_id}.faa -o vf_${genome_id}.matches_fmt6.txt --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen
+
+#merge output file
+cat *.matches_fmt6.txt > vf_all.matches_fmt6.txt
+
+#filter
+awk 'NR==1 || ($3 >= 60 && ($4/$13 > 0.5))' vf_all.matches_fmt6.txt > vf_all.filter.matches_fmt6.txt
+#add colum qcov
+awk -F'\t' 'BEGIN {OFS="\t"} NR==1 {print $0, "qcov"} NR>1 {if ($13 != 0) {qcov=$4/$13} else {qcov="NaN"}; print $0, qcov}' vf_all.filter.matches_fmt6.txt > vf_all.filter.qcov.matches_fmt6.txt
+
+#pick best hit
+sort -k1,1 -k13,13nr -k11,11g -k3,3nr -k15,15nr vf_all.filter.qcov.matches_fmt6.txt | awk -F'\t' '!seen[$1]++' > vf_best_matches.txt
+
+#extract CDS and vf
+cut -f 1,2 vf_best_matches.txt > CDS_vf.tsv

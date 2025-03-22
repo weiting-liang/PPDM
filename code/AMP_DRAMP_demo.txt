@@ -1,0 +1,21 @@
+#run for every genome's fa
+mkdir -p ./tmp
+macrel contigs --fasta $fa_file --output ./output -t 4 --tag $(basename $fa_file) --tmpdir ./tmp --force --log-file log.txt --log-append
+
+#merge output
+awk 'FNR > 2 || NR <= 2' *.prediction > AMP_merge_results.tsv
+
+#extract AMP sequence
+python extract_AMP.py
+
+#prepare DRAMP database
+makeblastdb -in DRAMP_general_amps.fasta  -input_type fasta -dbtype prot -parse_seqids -out DRAMP_general_amps
+
+#blastp
+blastp -query AMP.faa -db ./DRAMP_database/DRAMP_general_amps -evalue 1e-5 -word_size 3 -out outfmt6_results.tsv -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs"
+
+#filter
+awk '$3 >= 70 && $13 >= 95' outfmt6_results.tsv > outfmt6_results.filter.tsv
+
+#choose best hit
+sh DRAMP_prioritize.sh

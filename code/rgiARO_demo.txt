@@ -1,0 +1,15 @@
+#run for every genome's faa
+mkdir -p rgi_result
+cp -r /path/database_tmp/card/* .
+rgi main --input_sequence $(genome_id).faa --output_file rgi_result/$(genome_id) --local --clean -t protein -n 4
+
+#prepare all output path
+awk 'FNR==1 && NR!=1 {next} {print}' ./rgi_result/*.txt > result_rgi_file.txt
+
+#filter
+python filter.py
+
+#extract CDS and ARO
+awk -F'\t' '{print $1 "\t" $11}' result_rgi_filter.txt > CDS_ARO.txt
+
+

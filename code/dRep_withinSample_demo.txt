@@ -1,0 +1,11 @@
+#prepare the list of samples_id: samples_bins.list
+#prepare drep input from checkm2 output
+awk 'BEGIN{FS=OFS="\t"} NR==1{$1="genome"; $2="completeness"; $3="contamination"} {print $1,$2,$3}' all_checkm2_quality_report.tsv | sed 's/\t/,/g' > all_checkm2_quality_report.modified3.csv
+
+awk 'BEGIN{FS=OFS=","} NR==1{print $0; next} {$1=$1".fa"; print}' all_checkm2_quality_report.modified3.csv > all_checkm2_quality_report.modified3.rename.csv
+
+#get muliti-sample bash commond
+sh get_drep.sh
+
+#run all commond
+sh dRep.sh
